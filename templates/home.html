@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        /* static/style.css */
+
+/* Reset-ish */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #222;
+  background: #f6f8fa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Page wrapper (keeps content centered and constrained) */
+main, header {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Header */
+header {
+  background: linear-gradient(90deg, #2e8b57, #3cb371);
+  color: #fff;
+  border-radius: 10px;
+  padding: 1.25rem 1rem;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Title */
+header h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  transition: background 160ms ease, transform 120ms ease;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.03);
+}
+
+nav a:hover,
+nav a:focus {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.12);
+}
+
+/* Main content */
+main {
+  margin-top: 1.25rem;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+}
+
+/* Balance area */
+h2 {
+  font-size: 1.1rem;
+  margin-bottom: .5rem;
+  color: #0f172a;
+}
+
+/* Transaction list card */
+.transaction-card {
+  margin-top: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #eef2f6;
+}
+
+/* List styles */
+ul.transaction-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul.transaction-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(250,250,251,1), rgba(249,250,251,1));
+}
+
+ul.transaction-list li:last-child {
+  border-bottom: none;
+}
+
+/* Transaction left (date + type) */
+.tx-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.tx-date {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Transaction right (amount) */
+.tx-amount {
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+/* Positive / negative styling for amounts */
+.tx-amount.credit {
+  color: #0f5132; /* greenish */
+}
+
+.tx-amount.debit {
+  color: #8b1b1b; /* reddish */
+}
+
+/* Empty state */
+.empty-state {
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Small utilities */
+.small {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+/* Responsive layout */
+@media (max-width: 640px) {
+  header, main {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  nav {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    padding: 0.45rem 0.7rem;
+    margin-top: 0.25rem;
+  }
+
+  ul.transaction-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .tx-amount {
+    align-self: flex-end;
+  }
+}
+
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Welcome, {{ user.username }}</h1>
+        <nav>
+            <a href="{% url 'transaction' %}">Make a Transaction</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Account Balance: {{ account.balance }}</h2>
+        <h3>Transaction History</h3>
+        <ul>
+            {% for transaction in transactions %}
+                <li>{{ transaction.date }} - {{ transaction.transaction_type }}: {{ transaction.amount }}</li>
+            {% empty %}
+                <li>No transactions yet.</li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>
